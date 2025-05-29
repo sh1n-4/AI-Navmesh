@@ -1,7 +1,7 @@
 using UnityEngine;
-using Unity.AI.Navigation; //enables baking during runtime
-using System.Collections.Generic; //the use of lists
-using NaughtyAttributes;
+using Unity.AI.Navigation; 
+using System.Collections.Generic;
+//using NaughtyAttributes;
 
 public class RenderNavmesh : MonoBehaviour
 {
@@ -11,6 +11,8 @@ public class RenderNavmesh : MonoBehaviour
     [SerializeField] private int numObby;
     [SerializeField] List<GameObject> obbyPrefab;
     [SerializeField] private Vector2 randomPos;
+    [SerializeField] private Transform obstaclesParent;
+    [SerializeField] private int minDistance = 5;
 
     [SerializeField] GameObject player;
     private Vector3 spawnPos;
@@ -20,7 +22,7 @@ public class RenderNavmesh : MonoBehaviour
     {
         surface = GetComponent<NavMeshSurface>();
         Baker();
-        surface.BuildNavMesh();
+        
     }
 
     Vector3 RandomizePosition(float yPos)
@@ -35,12 +37,10 @@ public class RenderNavmesh : MonoBehaviour
         for (int i = 0; i < numObby; i++)
         {
             int prefabIndex = Random.Range(0, obbyPrefab.Count);
-
-            // float xOffset = player.transform.position.x;
-            // float zOffset = player.transform.position.y;
-            float minDistance = 5f;
+            
             Vector3 playerPos = player.transform.position;
             GameObject newObby = Instantiate(obbyPrefab[prefabIndex]);
+            newObby.transform.SetParent(obstaclesParent);
 
             do
             {
@@ -56,7 +56,13 @@ public class RenderNavmesh : MonoBehaviour
     //[Button]
     //void Bake()
     //{
+    //    foreach (Transform obstacle in obstacles)
+    //    {
+    //        Destroy(obstacle.gameObject);
+    //    }
+
     //    Baker();
+    //    surface.BuildNavMesh();
     //}
 }
 
