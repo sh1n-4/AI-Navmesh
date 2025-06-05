@@ -1,0 +1,26 @@
+using UnityEngine;
+using UnityEngine.AI;
+
+[RequireComponent(typeof(NavmeshAgent)]
+public class AIMovement : MonoBehaviour
+{
+  [SerializeField] private Camera camera;
+  [SerializeField] private Animator anim;
+  private NavmeshAgent agent;
+  private RaycastHit[] hits = new RaycastHit[1];
+
+  void Start(){
+    agent = GetComponent<NavmeshAgent>();
+    anim = GetComponent<Animator>();
+  }
+
+  void Update(){
+    if (Input.Keydown(Keycode.Mouse0)){
+      Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+      if (Physics.RaycastNonAlloc(ray, hits) > 0){
+        agent.SetDestination(hits[0].point);
+      }
+    }
+    anim.SetBool("IsWalking", agent.velocity.magnetude > 0.01f);
+  }
+}
