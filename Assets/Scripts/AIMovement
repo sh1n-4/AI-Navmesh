@@ -1,17 +1,30 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavmeshAgent)]
+[RequireComponent(typeof(NavmeshAgent), typeof(AgentLinkMover)]
 public class AIMovement : MonoBehaviour
 {
   [SerializeField] private Camera camera;
   [SerializeField] private Animator anim;
   private NavmeshAgent agent;
+  private AgentLinkMover linkMover;
   private RaycastHit[] hits = new RaycastHit[1];
 
   void Start(){
     agent = GetComponent<NavmeshAgent>();
-    anim = GetComponent<Animator>();
+    //anim = GetComponent<Animator>();
+    linkMover = GetComponent<AgentLinkMover>();
+
+    linkMover.OnLinkStart += HandleLinkStart;
+    linkMover.OnLinkEnd += HandleLinkEnd;
+  }
+
+  private void HandleLinkStart(){
+    anim.SetTrigger("Jump");
+  }
+
+  private void HandLinkEnd(){
+    anim.SetTrigger("Landed");
   }
 
   void Update(){
